@@ -1,0 +1,8 @@
+#!/bin/sh
+# Only orchestrates containers. All project execution happens in the HolyNet lab.
+set -eu
+ROOT=$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)
+NET=${HOLYNET_DIR:-"$ROOT/../holynet"}
+[ -f "$NET/lab/tos" ] || { echo "Missing HolyNet. Place holynet beside holyapify, or set HOLYNET_DIR." >&2; exit 64; }
+export TOS_APP_DIR="$ROOT"
+exec "$NET/lab/tos" "$@"
