@@ -76,6 +76,24 @@ U0 TestBig()
   HttpResponseFree(r);
 }
 
+CConn *OpenShortTimeout(U8 *host, I64 port)
+{
+  CConn *c = ConnTcpOpen(host, port);
+  if (c)
+    ConnTcpSetReadTimeout(c, 100);
+  return c;
+}
+
+U0 TestDelayedRun()
+{
+  U8 *body;
+  apify_open = &OpenShortTimeout;
+  body = ApifyRunSync("test-token", "test/delayed-run", "{}");
+  TestCheck(body != NULL, "Actor wait overrides the short transport timeout");
+  Free(body);
+  apify_open = &ConnTcpOpen;
+}
+
 U0 Main()
 {
   F64 t0 = tS;
@@ -83,6 +101,7 @@ U0 Main()
   ApifyUsePlain("10.0.2.100", 80);
   TestUsersMe();
   TestRunSync();
+  TestDelayedRun();
   TestBig();
   SerPrint("elapsed %.1f s\n", tS - t0);
   TestDone();

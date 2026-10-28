@@ -1,5 +1,17 @@
 # Validation status
 
+## README replication checks
+
+The linked HolyNet lab image built successfully, and a fresh TempleOS ISO download matched its documented SHA-256. Tests ran from fresh local clones with the pending changes applied, inside stock TempleOS VMs. The shell launchers ran inside a separate container controlling rootless Podman; that harness omitted the remote client's unsupported `--group-add keep-groups` flag. The shipped local launcher retains it.
+
+The client suite passed all three entries: 23 plain API mock checks, 3 TLS frontend checks and 4 real-API checks using an invalid token. The included `examples/RunActor.HC` passed 2 checks over TLS with a runtime mock token and printed account details and dataset items. The real API returned HTTP 401 for both account lookup and Actor submission.
+
+The same example passed both checks with a real token supplied at runtime: authenticated account lookup, then a one-page `apify/website-content-crawler` run against `https://example.com`. It returned one dataset item with title `Example Domain`. All client requests and TLS ran in HolyC inside the guest; the host relay copied TCP bytes. No token, account identifier, real-run screenshot or raw log was committed.
+
+Actor calls now allow 310 seconds without response bytes instead of inheriting the transport's 60-second limit. A regression with a 100 ms transport timeout and a 500 ms delayed mock response passes with the fix and fails without it. The README documents the separate VM timeout and provides a complete runtime-token command.
+
+Gitleaks 8.30.1 found no secrets in either repository's reachable committed history or working tree. A separate content scan found no owner names, personal paths or private infrastructure details; repository URLs intentionally contain the account handle. Logo PNGs contain no text or EXIF metadata. Git author/committer identity was inspected and deliberately retained at the owner's request.
+
 ## Repository split: current checks
 
 All execution below took place in rootless Podman. HolyC checks ran in fresh stock TempleOS V5.03 VMs inside the container. The official ISO was downloaded in a container to RAM and matched the README's expected SHA-256.

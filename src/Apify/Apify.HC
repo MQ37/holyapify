@@ -98,6 +98,9 @@ U8 *ApifyCall(U8 *method, U8 *path, U8 *token, U8 *input)
     ApifyErr(0, "cannot connect");
     return NULL;
   }
+  // A synchronous Actor may send no response bytes until its 300-second API limit.
+  if (input)
+    ConnTcpSetReadTimeout(c, 310000);
   if (input) {
     hdr = MStrPrint("Authorization: Bearer %s\r\nAccept: application/json\r\nContent-Type: application/json\r\n", token);
     len = StrLen(input);
