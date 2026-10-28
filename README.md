@@ -31,7 +31,7 @@ ApifyRun("apify/hello-world", "{}");
 
 **Experimental, unauthenticated TLS.** HolyNet does not validate server certificates or CertificateVerify signatures, and its random generator is experimental. Use disposable credentials and non-sensitive data only. [Read the security model before using a token.](SECURITY.md)
 
-## Quick start: no account needed
+## Quick start
 
 Clone the two repositories next to each other:
 
